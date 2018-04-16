@@ -1,0 +1,119 @@
+Sea surface winds effect on Yelkouan Shearwater migration
+========================================================
+author: Esra Ergin
+date: 
+autosize: true
+
+Introduction
+========================================================
+The Yelkouan Shearwater is a seabird species that member of the Procellariidae or tubenoses which allows them to filter salt and stay out at sea for long periods without access to fresh water. (Bourgeois and Vidal 2008). Yelkouan Shearwater is depended on marine resources and spend most of their lives at sea. Outside the breeding season do not come to land.
+
+========================================================
+To reduce the cost of the flight, seabirds utilize surface winds and modify their direction in correlation to the wind direction and strength. The high-aspect-ratio of their wings provides seabirds with an opportunity to use dynamic soaring and therefore reduce the cost of constant flapping in favorable wind conditions. Shearwaters are one of the examples of seabirds that exploit the wind velocity to make their flight more energy efficient. They use intermittent flapping flight where short flapping phases are interspersed with gliding phases. Spivey et al. (2014)
+
+
+Hypothesis
+========================================================
+How wind influences seabird movements at sea is important for understanding their life history strategies and in particular how large- and small-scale environmental factors such as wind affect and temperature modulate foraging behavior. Are the peak migration movements of the Yelkouan shearwater in the Bosporus driven by the surface wind fields between the Black Sea and the Sea of Marmara?
+
+Library
+========================================================
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(readxl)
+setwd('~/Desktop/')
+bird_data <- read_xlsx("/Users/esra/Desktop/bird_data.xlsx")
+```
+
+Library
+===========================================================================
+```{r}
+library(tidyverse)
+setwd('~/Desktop/') 
+weather_ist <- read.csv(file="/Users/esra/Desktop/weather_ist.csv")
+head(weather_ist)
+save(weather_ist, file = "weather.RData")
+```
+
+Plot
+===========================================================================
+```{r}
+ggplot (data=bird_data, aes (x=year, y=period_total)) + geom_line()
+```
+
+Regression
+===========================================================================
+```{r}
+Regr.Yel <- lm(period_total ~ year, data=bird_data) 
+summary(Regr.Yel)
+```
+
+
+Plot
+===========================================================================
+```{r}
+oldpar <- par(mfrow = c(2, 2))
+plot(Regr.Yel, which=c(1,2,4,5))
+```
+
+Regression
+===========================================================================
+```{r}
+Regr.YelM <- lm(period_total ~ month, data=bird_data) 
+summary(Regr.YelM)
+oldpar <- par(mfrow = c(2, 2))
+plot(Regr.YelM, which=c(1,2,4,5))
+```
+
+Plot
+===========================================================================
+```{r}
+plot(weather_ist[,c(2,3,4,11,12,13,17,18)])
+```
+
+Regression
+===========================================================================
+```{r}
+regr.Wind<- lm(Max.Wind.SpeedKm.h ~ Max.Sea.Level.PressurehPa, data=weather_ist)
+summary(regr.Wind)
+```
+
+
+Plot
+===========================================================================
+```{r}
+oldpar <- par(mfrow = c(2, 2))
+plot(regr.Wind, which=c(1,2,4,5))
+```
+
+
+Regression
+===========================================================================
+```{r}
+regr.WindMinPa<- lm(Max.Wind.SpeedKm.h ~ Min.Sea.Level.PressurehPa, data=weather_ist)
+summary(regr.WindMinPa)
+```
+
+Plot
+===========================================================================
+```{r}
+oldpar <- par(mfrow = c(2, 2))
+plot(regr.WindMinPa, which=c(1,2,4,5))
+```
+
+Regression
+===========================================================================
+```{r}
+regr.WindPaT<- lm(Max.Wind.SpeedKm.h ~ Max.Sea.Level.PressurehPa+Max.TemperatureC, data=weather_ist)
+summary(regr.WindPaT)
+```
+
+Plot
+===========================================================================
+```{r}
+oldpar <- par(mfrow = c(2, 2))
+plot(regr.WindPaT, which=c(1,2,4,5))
+```
